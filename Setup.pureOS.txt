@@ -1,1 +1,73 @@
 
+#!/bin/bash
+
+echo "Начало установки и настройки..."
+
+# Обновление системы и установка основных утилит
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y build-essential git wget curl vim x11-xserver-utils gnome-tweaks
+
+# Исправление сломанных зависимостей
+sudo apt --fix-broken install -y
+
+# Очистка ненужных пакетов и кэша
+sudo apt autoremove -y
+sudo apt clean
+sudo apt autoclean
+
+# Установка браузера Chromium
+sudo apt install -y chromium
+
+# Установка Python и необходимых пакетов
+sudo apt install -y python3 python3-pip
+
+# Установка Node.js и npm
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Установка Docker
+sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+sudo usermod -aG docker $USER
+
+# Установка сетевых инструментов
+sudo apt install -y nmap net-tools wireshark
+
+# Установка инструментов для защиты и отладки
+sudo apt install -y gdb valgrind strace
+
+# Настройка SSH
+sudo apt install -y openssh-server
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+# Установка VirtualBox
+sudo apt install -y virtualbox
+
+# Настройка разрешения экрана
+xrandr --output eDP-1 --mode 1440x900
+
+# Установка IDE
+# Установка Visual Studio Code
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+sudo apt update
+sudo apt install -y code
+
+# Установка IntelliJ IDEA Community Edition
+sudo snap install intellij-idea-community --classic
+
+# Установка Sublime Text
+wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+sudo apt update
+sudo apt install -y sublime-text
+
+# Завершение установки и вывод сообщения
+echo "Установка и настройка завершены. Перезагрузите компьютер, чтобы все изменения вступили в силу."
+
+echo "Если вы используете Docker, не забудьте выйти из системы и войти снова, чтобы изменения вступили в силу."
